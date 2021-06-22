@@ -164,4 +164,15 @@ const remove = () => {
     })
 };
 
-runProgram();
+const showRole = () => {
+    console.log(` \n`)
+    connection.query(
+        `SELECT r.id "ID", r.title "title" FROM ROLE r;`,
+        (err, res) => {
+            if (err) throw err;
+            console.table(res)
+        })
+    setTimeout(console.log(` \n`), 10)
+    setTimeout(firstQuestion, 100)
+};
+
