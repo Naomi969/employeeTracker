@@ -228,3 +228,101 @@ const addRole = () => {
     })
 };
 
+const removeRole = () => {
+    connection.query(`SELECT * FROM ROLE;`, (err, res) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: `roles`,
+                type: `rawlist`,
+                message: `Which role would you like to remove?"\n`,
+                choices() {
+                    const rolesArray = [];
+                    res.forEach(({ title }) => {
+                        rolesArray.push(title);
+                    });
+                    return rolesArray;
+                },
+            },
+        ])
+            .then((answer) => {
+                connection.query(`DELETE FROM ROLE WHERE ?`,
+                    {
+                        title: (answer.roles)
+                    },
+                    (err, res) => {
+                        if (err) throw err
+                        console.log(`${res.affectedRows} Deleted\n`)
+                        showRoles();
+                    })
+            })
+    })
+};
+
+const showDepartments = () => {
+    connection.query(
+        `SELECT * FROM DEPARTMENT;`,
+        (err, res) => {
+            if (err) throw err;
+            console.table(res)
+        })
+    setTimeout(console.log(` \n`), 10)
+    setTimeout(firstQuestion, 100)
+};
+
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+            name: `name`,
+            type: `input`,
+            message: `Enter New Department:`,
+        }
+    ])
+        .then((answer) => {
+            connection.query(
+                `INSERT INTO DEPARTMENT SET ?`,
+                [
+                    {
+                        name: answer.name,
+                    },
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`${res.affectedRows} new department added. \n`)
+                    showDepartments();
+                })
+        })
+};
+
+const removeDepartment = () => {
+    connection.query(`SELECT * FROM DEPARTMENT;`, (err, res) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: `departments`,
+                type: `rawlist`,
+                message: `Which department would you like to remove?"\n`,
+                choices() {
+                    const departmentsArray = [];
+                    res.forEach(({ name }) => {
+                        departmentsArray.push(name);
+                    });
+                    return departmentsArray;
+                },
+            },
+        ])
+            .then((answer) => {
+                connection.query(`DELETE FROM DEPARTMENT WHERE ?`,
+                    {
+                        name: (answer.departments)
+                    },
+                    (err, res) => {
+                        if (err) throw err
+                        console.log(`${res.affectedRows} Deleted\n`)
+                        showDepartments();
+                    })
+            })
+    })
+};
+
+runProgram();
