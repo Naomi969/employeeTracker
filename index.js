@@ -176,3 +176,55 @@ const showRole = () => {
     setTimeout(firstQuestion, 100)
 };
 
+const addRole = () => {
+    connection.query(`SELECT * FROM DEPARTMENT`, (err, res) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: `title`,
+                type: `input`,
+                message: `Enter New Role:`,
+            },
+            {
+                name: `salary`,
+                type: `input`,
+                message: `Enter Salary:`,
+            },
+            {
+                name: `department`,
+                type: `input`,
+                message() {
+                    const departmentArray = [];
+                    res.forEach(({ name, id }) => {
+                        departmentArray.push(id + ' = ' + name);
+                    });
+                    console.log(`What is the Department ID?\n`)
+                    return departmentArray.join(`\n`)
+                },
+                validate: (answer) => {
+                    if (isNaN(answer)) {
+                        return "Please enter the ID number";
+                    }
+                    return true;
+                },
+            }
+        ])
+            .then((answer) => {
+                connection.query(
+                    `INSERT INTO ROLE SET ?`,
+                    [
+                        {
+                            title: answer.title,
+                            salary: answer.salary,
+                            department_id: answer.department
+                        },
+                    ],
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log(`${res.affectedRows} new role added. \n`)
+                        showRoles();
+                    })
+            })
+    })
+};
+
