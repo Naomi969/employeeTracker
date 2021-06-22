@@ -44,7 +44,6 @@ const show = () => {
         (err, res) => {
             if (err) throw err;
             console.table(res)
-
         }).then
     setTimeout(console.log(` \n`), 10)
     setTimeout(firstQuestion, 100)
@@ -324,5 +323,27 @@ const removeDepartment = () => {
             })
     })
 };
+
+const firstQuestion = () => {
+    inquirer.prompt({
+        name: 'userChoice',
+        type: 'rawlist',
+        message: 'What would you like to do?\n',
+        choices: [
+            'View All Employees',
+            'Add Employee',
+            'Remove Employee',
+            'Update Employee Role',
+            'View All Roles',
+            'Add Role',
+            'Remove Role',
+            'View All Departments',
+            'Add Department',
+            'Remove Department',
+            'End Program'
+        ]
+    })
+}
+
 
 runProgram();
