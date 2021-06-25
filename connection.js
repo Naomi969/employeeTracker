@@ -13,7 +13,7 @@ connection.connect((err) => {
     if (!err) {
         console.log('yay')
     } else {
-        console.log("Connection Failed");
+        console.log("nope - go check your code!");
     }
 });
 
